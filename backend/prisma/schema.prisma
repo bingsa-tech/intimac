@@ -1,0 +1,349 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// ENUMS
+// ----------------------------------------------------
+
+enum Role {
+  STUDENT
+  PROFESSIONAL
+  ADVISOR
+  UNIVERSITY
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  REVIEWING
+  ACCEPTED
+  REJECTED
+  WAITLISTED
+}
+enum NotificationType {
+  STEP_UPDATED
+  APPOINTMENT_CREATED
+  APPOINTMENT_CONFIRMED
+  GENERAL
+}
+
+enum DocumentType {
+  PASSPORT
+  TRANSCRIPT
+  DIPLOMA
+  CAQ
+  FINANCIAL_PROOF
+  OTHER
+}
+
+enum ImmigrationStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum DegreeLevel {
+  DIPLOMA
+  BACHELOR
+  MASTER
+  PHD
+  CERTIFICATE
+}
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+enum PaymentProvider {
+  STRIPE
+  MOBILE_MONEY
+}
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+// ----------------------------------------------------
+// MODELS
+// ----------------------------------------------------
+
+model User {
+  id                   String            @id @default(cuid())
+  email                String            @unique
+  firstName            String?
+  lastName             String?
+  password             String
+  role                 Role              @default(STUDENT)
+  isVerified           Boolean           @default(false)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  profile              Profile?
+  subscription         Subscription?
+  applications         Application[]
+  documents            Document[]
+  matchings            Matching[]
+  notifications        Notification[]
+  immigrationSteps     ImmigrationStep[]
+  studentAppointments  Appointment[]     @relation("StudentAppointments")
+  advisorAppointments  Appointment[]     @relation("AdvisorAppointments")
+}
+
+model Profile {
+  id               String   @id @default(cuid())
+  firstName        String
+  lastName         String
+  birthDate        DateTime
+  gender           Gender
+  nationality      String
+  phone            String?
+  address          String?
+  city             String?
+  country          String
+  highestEducation String?
+  experience       Int?
+  gpa              Float?
+  budget           Float?
+  englishLevel     String?
+  frenchLevel      String?
+  photo            String?
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model University {
+  id          String    @id @default(cuid())
+  name        String
+  countryId   String
+  provinceId  String?
+  cityId      String?
+  website     String?
+  ranking     Int?
+  description String?
+  logo        String?
+  programs    Program[]
+  country     Country   @relation(fields: [countryId], references: [id])
+  province    Province? @relation(fields: [provinceId], references: [id])
+  city        City?     @relation(fields: [cityId], references: [id])
+  scholarships Scholarship[]
+}
+
+model Program {
+  id           String            @id @default(cuid())
+  title        String
+  degree       DegreeLevel
+  duration     Int
+  tuition      Float
+  minimumGpa   Float?
+  description  String?
+  universityId String
+  university   University        @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  applications Application[]
+  matchings    Matching[]
+  languages    ProgramLanguage[]
+}
+model ProgramLanguage {
+  id        String   @id @default(cuid())
+  language  String
+  programId String
+  program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+model Application {
+  id        String            @id @default(cuid())
+  status    ApplicationStatus @default(DRAFT)
+  motivation String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  userId    String
+  programId String
+  user      User              @relation(fields: [userId], references: [id])
+  program   Program           @relation(fields: [programId], references: [id])
+}
+
+model Document {
+ id           String       @id @default(uuid())
+  originalName String
+  filename     String
+  filePath     String
+  type         DocumentType @default(OTHER)
+  isVerified   Boolean      @default(false)
+  userId       String
+  createdAt    DateTime     @default(now())
+  user       User         @relation(fields: [userId], references: [id])
+}
+
+model Matching {
+  id             String   @id @default(cuid())
+  score          Float
+  recommendation String?
+  createdAt      DateTime @default(now())
+  userId         String
+  programId      String
+  user           User     @relation(fields: [userId], references: [id])
+  program        Program  @relation(fields: [programId], references: [id])
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  EXPIRED
+  PAST_DUE
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  plan      SubscriptionPlan   @default(FREE)
+  status    SubscriptionStatus @default(ACTIVE)
+  startDate DateTime           @default(now())
+  endDate   DateTime
+  stripeId  String?
+  userId    String             @unique
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ImmigrationStep {
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  order       Int
+  status      ImmigrationStatus @default(NOT_STARTED)
+  country     String?
+  completedAt DateTime?
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType @default(GENERAL)
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+model Country {
+  id           String       @id @default(cuid())
+  name         String       @unique
+  code         String?      // Optionnel (ex: "CA", "FR")
+  provinces    Province[]   // NOUVEAU: Un pays a plusieurs provinces
+  universities University[]
+  scholarships Scholarship[]
+}
+
+model Province {
+  id           String       @id @default(cuid())
+  name         String
+  countryId    String       // NOUVEAU: Une province appartient à un pays
+  country      Country      @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  cities       City[]       // NOUVEAU: Une province a plusieurs villes
+  universities University[]
+
+  @@unique([name, countryId]) // Évite les doublons de province dans un même pays
+}
+
+model City {
+  id           String       @id @default(cuid())
+  name         String
+  provinceId   String       // NOUVEAU: Une ville appartient à une province
+  province     Province     @relation(fields: [provinceId], references: [id], onDelete: Cascade)
+  universities University[]
+
+  @@unique([name, provinceId]) // Évite les doublons de ville dans une même province
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  date        DateTime
+  durationMin Int               @default(30)
+  status      AppointmentStatus @default(PENDING)
+  meetingUrl  String?
+  notes       String?
+
+  studentId   String
+  advisorId   String
+
+  student     User              @relation("StudentAppointments", fields: [studentId], references: [id], onDelete: Cascade)
+  advisor     User              @relation("AdvisorAppointments", fields: [advisorId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model Transaction {
+  id              String          @id @default(uuid())
+  amount          Float
+  currency        String          @default("CAD") // Ou XOF, EUR, USD
+  status          PaymentStatus   @default(PENDING)
+  provider        PaymentProvider
+  providerTxId    String?         // ID de la transaction Stripe (ch_... ou pi_...) ou Mobile Money
+  description     String?
+  userId          String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+model Scholarship {
+  id           String      @id @default(cuid())
+  title        String
+  description  String
+  amount       Float?
+  coverageType String
+  deadline     DateTime
+  countryId    String
+  country      Country     @relation(fields: [countryId], references: [id])
+  universityId String?
+  university   University? @relation(fields: [universityId], references: [id])
+  link         String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+model news {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   @db.Text
+  category  String?  @default("Information")
+  source    String?
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("PENDING") // PENDING, READ, REPLIED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+// ----------------------------------------------------
+// REMARQUE: N'oubliez pas de définir les modèles manquants 
+// référencés par vos relations : Country, Province, City, 
+// ProgramLanguage, Appointment.
+// ----------------------------------------------------

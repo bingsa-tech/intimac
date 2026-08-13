@@ -20,6 +20,9 @@
         <router-link to="/admin/appointments" class="nav-item">
           Gestion des Rendez-vous
         </router-link>
+        <router-link to="/admin/assessment-requests" class="nav-item">
+          Demandes d'évaluation
+        </router-link>
         <router-link to="/admin/settings" class="btn-settings" >Paramètres (Entités)</router-link>
         <!--  Désactivé ou redirigé tant que la vue /admin/users n'existe pas dans index.ts -->
         <!-- 

@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 // Import des composants réutilisables
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
+import GuestAssessmentWidget from './components/GuestAssessmentWidget.vue';
 
 const route = useRoute();
 
@@ -15,7 +16,7 @@ const isDashboard = computed(() => route.path.startsWith('/dashboard'));
 <template>
   <div id="app-container">
     <Header v-if="!isDashboard" />
-
+    <GuestAssessmentWidget />
     <main class="main-content">
       <router-view />
     </main>

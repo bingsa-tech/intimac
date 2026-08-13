@@ -10,7 +10,7 @@
 
       <div class="footer-section brand-section">
         <h3>🎓 Portail Études</h3>
-        <p>Votre plateforme d'orientation et d'accompagnement à l'international.</p>
+        <p>Votre plateforme d'orientation et d'accompagnement à l'immigration.</p>
       </div>
 
       <div class="footer-section">

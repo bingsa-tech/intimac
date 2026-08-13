@@ -5,6 +5,7 @@ import { ImmigrationModule } from './immigration/immigration.module';
 import { ScholarshipModule } from './scholarship/scholarship.module';
 import { NewsModule } from './news/news.module';
 import { ContactMessageModule } from './contact-message/contact-message.module';
+import { AssessmentModule } from './assessment/assessment.module';
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";

@@ -37,6 +37,7 @@ enum ApplicationStatus {
   REJECTED
   WAITLISTED
 }
+
 enum NotificationType {
   STEP_UPDATED
   APPOINTMENT_CREATED
@@ -60,51 +61,57 @@ enum ImmigrationStatus {
 }
 
 enum DegreeLevel {
+  HIGH_SCHOOL
   DIPLOMA
   BACHELOR
   MASTER
   PHD
   CERTIFICATE
 }
+
 enum PaymentStatus {
   PENDING
   SUCCESS
   FAILED
   REFUNDED
 }
+
 enum PaymentProvider {
   STRIPE
   MOBILE_MONEY
 }
+
 enum AppointmentStatus {
   PENDING
   CONFIRMED
   CANCELLED
   COMPLETED
 }
+
 // ----------------------------------------------------
 // MODELS
 // ----------------------------------------------------
 
 model User {
-  id                   String            @id @default(cuid())
-  email                String            @unique
-  firstName            String?
-  lastName             String?
-  password             String
-  role                 Role              @default(STUDENT)
-  isVerified           Boolean           @default(false)
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
-  profile              Profile?
-  subscription         Subscription?
-  applications         Application[]
-  documents            Document[]
-  matchings            Matching[]
-  notifications        Notification[]
-  immigrationSteps     ImmigrationStep[]
-  studentAppointments  Appointment[]     @relation("StudentAppointments")
-  advisorAppointments  Appointment[]     @relation("AdvisorAppointments")
+  id                  String            @id @default(cuid())
+  email               String            @unique
+  firstName           String?
+  lastName            String?
+  password            String
+  role                Role              @default(STUDENT)
+  isVerified          Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  profile             Profile?
+  subscription        Subscription?
+  applications        Application[]
+  documents           Document[]
+  matchings           Matching[]
+  notifications       Notification[]
+  immigrationSteps    ImmigrationStep[]
+  studentAppointments Appointment[]     @relation("StudentAppointments")
+  advisorAppointments Appointment[]     @relation("AdvisorAppointments")
+  assessments         Assessment[]
 }
 
 model Profile {
@@ -130,19 +137,19 @@ model Profile {
 }
 
 model University {
-  id          String    @id @default(cuid())
-  name        String
-  countryId   String
-  provinceId  String?
-  cityId      String?
-  website     String?
-  ranking     Int?
-  description String?
-  logo        String?
-  programs    Program[]
-  country     Country   @relation(fields: [countryId], references: [id])
-  province    Province? @relation(fields: [provinceId], references: [id])
-  city        City?     @relation(fields: [cityId], references: [id])
+  id           String        @id @default(cuid())
+  name         String
+  countryId    String
+  provinceId   String?
+  cityId       String?
+  website      String?
+  ranking      Int?
+  description  String?
+  logo         String?
+  programs     Program[]
+  country      Country       @relation(fields: [countryId], references: [id])
+  province     Province?     @relation(fields: [provinceId], references: [id])
+  city         City?         @relation(fields: [cityId], references: [id])
   scholarships Scholarship[]
 }
 
@@ -160,26 +167,28 @@ model Program {
   matchings    Matching[]
   languages    ProgramLanguage[]
 }
+
 model ProgramLanguage {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   language  String
   programId String
-  program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
 }
+
 model Application {
-  id        String            @id @default(cuid())
-  status    ApplicationStatus @default(DRAFT)
+  id         String            @id @default(cuid())
+  status     ApplicationStatus @default(DRAFT)
   motivation String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  userId    String
-  programId String
-  user      User              @relation(fields: [userId], references: [id])
-  program   Program           @relation(fields: [programId], references: [id])
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  userId     String
+  programId  String
+  user       User              @relation(fields: [userId], references: [id])
+  program    Program           @relation(fields: [programId], references: [id])
 }
 
 model Document {
- id           String       @id @default(uuid())
+  id           String       @id @default(uuid())
   originalName String
   filename     String
   filePath     String
@@ -187,7 +196,7 @@ model Document {
   isVerified   Boolean      @default(false)
   userId       String
   createdAt    DateTime     @default(now())
-  user       User         @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
 }
 
 model Matching {
@@ -226,32 +235,38 @@ model Subscription {
 }
 
 model ImmigrationStep {
-  id          String            @id @default(cuid())
-  title       String
-  description String?
-  order       Int
-  status      ImmigrationStatus @default(NOT_STARTED)
-  country     String?
-  completedAt DateTime?
-  userId      String
-  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                  String             @id @default(cuid())
+  title               String
+  description         String?
+  order               Int
+  status              ImmigrationStatus  @default(NOT_STARTED)
+  country             String?
+  estimatedCost       Float?
+  requiredDocs        String[]
+  category            String?
+  completedAt         DateTime?
+  userId              String?
+  user                User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assessmentRequestId String?
+  assessmentRequest   AssessmentRequest? @relation(fields: [assessmentRequestId], references: [id], onDelete: Cascade)
 }
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String           @id @default(cuid())
   title     String
   message   String
   type      NotificationType @default(GENERAL)
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User             @relation(fields: [userId], references: [id])
 }
+
 model Country {
-  id           String       @id @default(cuid())
-  name         String       @unique
-  code         String?      // Optionnel (ex: "CA", "FR")
-  provinces    Province[]   // NOUVEAU: Un pays a plusieurs provinces
+  id           String        @id @default(cuid())
+  name         String        @unique
+  code         String? // Optionnel (ex: "CA", "FR")
+  provinces    Province[] // NOUVEAU: Un pays a plusieurs provinces
   universities University[]
   scholarships Scholarship[]
 }
@@ -259,9 +274,9 @@ model Country {
 model Province {
   id           String       @id @default(cuid())
   name         String
-  countryId    String       // NOUVEAU: Une province appartient à un pays
+  countryId    String // NOUVEAU: Une province appartient à un pays
   country      Country      @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  cities       City[]       // NOUVEAU: Une province a plusieurs villes
+  cities       City[] // NOUVEAU: Une province a plusieurs villes
   universities University[]
 
   @@unique([name, countryId]) // Évite les doublons de province dans un même pays
@@ -270,7 +285,7 @@ model Province {
 model City {
   id           String       @id @default(cuid())
   name         String
-  provinceId   String       // NOUVEAU: Une ville appartient à une province
+  provinceId   String // NOUVEAU: Une ville appartient à une province
   province     Province     @relation(fields: [provinceId], references: [id], onDelete: Cascade)
   universities University[]
 
@@ -285,28 +300,29 @@ model Appointment {
   meetingUrl  String?
   notes       String?
 
-  studentId   String
-  advisorId   String
+  studentId String
+  advisorId String
 
-  student     User              @relation("StudentAppointments", fields: [studentId], references: [id], onDelete: Cascade)
-  advisor     User              @relation("AdvisorAppointments", fields: [advisorId], references: [id], onDelete: Cascade)
+  student User @relation("StudentAppointments", fields: [studentId], references: [id], onDelete: Cascade)
+  advisor User @relation("AdvisorAppointments", fields: [advisorId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Transaction {
-  id              String          @id @default(uuid())
-  amount          Float
-  currency        String          @default("CAD") // Ou XOF, EUR, USD
-  status          PaymentStatus   @default(PENDING)
-  provider        PaymentProvider
-  providerTxId    String?         // ID de la transaction Stripe (ch_... ou pi_...) ou Mobile Money
-  description     String?
-  userId          String
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id           String          @id @default(uuid())
+  amount       Float
+  currency     String          @default("CAD") // Ou XOF, EUR, USD
+  status       PaymentStatus   @default(PENDING)
+  provider     PaymentProvider
+  providerTxId String? // ID de la transaction Stripe (ch_... ou pi_...) ou Mobile Money
+  description  String?
+  userId       String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
 }
+
 model Scholarship {
   id           String      @id @default(cuid())
   title        String
@@ -322,6 +338,7 @@ model Scholarship {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 }
+
 model news {
   id        String   @id @default(uuid())
   title     String
@@ -332,6 +349,7 @@ model news {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 model ContactMessage {
   id        String   @id @default(cuid())
   name      String
@@ -342,6 +360,69 @@ model ContactMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Assessment {
+  id                   String             @id @default(uuid())
+  createdAt            DateTime           @default(now())
+  userId               String?
+  user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assessmentRequestId  String?            @unique
+  assessmentRequest    AssessmentRequest? @relation(fields: [assessmentRequestId], references: [id], onDelete: Cascade)
+  // Données profil communes
+  age                  Int
+  educationLevel       DegreeLevel
+  workExperienceYrs    Int
+  clbFrench            Int // Niveau NCLC (0 à 12)
+  clbEnglish           Int // Niveau CLB (0 à 12)
+  // Spécificités Québec (PSTQ / Arrima)
+  quebecFrenchOral     Int? // Niveau oral (1 à 12)
+  hasQuebecDegree      Boolean            @default(false)
+  quebecJobOfferRegion String? // Ex: "MONTREAL", "REGIONAL", "NONE"
+  // Spécificités Ontario (OINP)
+  ontarioHourlyWage    Float? // Taux horaire proposé
+  isOutsideGTA         Boolean            @default(false) // Hors Grand Toronto
+  ontarioWorkExpYrs    Int                @default(0)
+
+  // Spécificités Colombie-Britannique (BC PNP)
+  bcAnnualSalary Float? // Salaire annuel proposé
+  bcRegionZone   Int? // Zone 1, 2 ou 3
+  hasBcDegree    Boolean @default(false)
+
+  // Offre d'emploi & Catégorie
+  teerCategory      Int // FEER 0, 1, 2, 3, 4, 5
+  hasValidatedOffer Boolean @default(false)
+
+  // Résultats calculés
+  federalEligible Boolean
+  federalCrsScore Int?
+  quebecEligible  Boolean
+  ontarioScore    Int?
+  bcPnpScore      Int?
+}
+
+// Request test
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model AssessmentRequest {
+  id               String            @id @default(cuid())
+  email            String            @unique
+  country          String
+  fullName         String
+  phone            String?
+  status           RequestStatus     @default(PENDING)
+  // Un jeton temporaire unique généré quand l'admin valide
+  accessToken      String?           @unique
+  expiresAt        DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  assessment       Assessment?
+  immigrationSteps ImmigrationStep[]
+}
+
 // ----------------------------------------------------
 // REMARQUE: N'oubliez pas de définir les modèles manquants 
 // référencés par vos relations : Country, Province, City, 

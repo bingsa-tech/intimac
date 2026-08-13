@@ -22,6 +22,7 @@ const logout = () => {
         <router-link to="/dashboard/documents" active-class="active">📄 Mes Documents</router-link>
         <router-link to="/dashboard/roadmap" active-class="active">🚀 Roadmap</router-link> 
         <router-link to="/dashboard/appointments" active-class="active">📅 Prise de Rendez-vous</router-link> 
+        <router-link to="/dashboard/assessments" active-class="active"> Évaluations</router-link>
         <router-link to="/dashboard/subscription" active-class="active">💳 Mon Abonnement</router-link>
       </nav>
       <div class="user-info">

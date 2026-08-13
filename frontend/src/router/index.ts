@@ -13,6 +13,8 @@ import DocumentView from '../views/dashboard/DocumentsView.vue';
 import RoadMapView from '../views/dashboard/RoadMapView.vue';
 import AppointmentsView from '../views/dashboard/AppointmentsView.vue';
 import AdminMessageView from '../views/admin/AdminMessageView.vue';
+import AssessmentsView from '../views/dashboard/AssessmentView.vue';
+
 const routes = [
   { 
     path: '/', 
@@ -32,19 +34,22 @@ const routes = [
 
   // 🎓 ESPACE ÉTUDIANT
   { 
-    path: '/dashboard', 
-    component: DashboardLayout,
-    meta: { requiresAuth: true, requiredRole: 'STUDENT' },
-    children: [
-      { path: '', name: 'student-dashboard', component: DashboardHome },
-      { path: 'matching', name: 'student-matching', component: MatchingsView },
-      { path: 'applications', name: 'student-applications', component: ApplicationsView },
-      { path: 'subscription', name: 'student-subscription', component: SubscriptionView },
-      { path: 'documents', name: 'student-documents', component: DocumentView },
-      { path: 'appointments', name: 'student-appointments', component: AppointmentsView },
-      { path: 'roadmap', name: 'student-roadmap', component: RoadMapView },
-    ]
-  },
+  path: '/dashboard', 
+  component: DashboardLayout,
+  meta: { requiresAuth: true, requiredRole: 'STUDENT' },
+  children: [
+    { path: '', name: 'student-dashboard', component: DashboardHome },
+    { path: 'matching', name: 'student-matching', component: MatchingsView },
+    { path: 'applications', name: 'student-applications', component: ApplicationsView },
+    { path: 'subscription', name: 'student-subscription', component: SubscriptionView },
+    { path: 'documents', name: 'student-documents', component: DocumentView },
+    { path: 'appointments', name: 'student-appointments', component: AppointmentsView },
+    {path: 'assessments', name: 'student-assessments', component: AssessmentsView },
+    { path: 'roadmap', name: 'student-roadmap', component: RoadMapView },
+    // ✅ Utilisation du Lazy-Loading avec l'alias '@' (ou '../views/dashboard/AssessmentView.vue')
+   
+  ]
+},
 
   // 🛡️ ESPACE ADMINISTRATION
   {
@@ -67,6 +72,16 @@ const routes = [
         name: 'admin-create-news',
         component: () => import('../views/admin/CreateNewsView.vue'),
       },
+      {
+        path: '/admin/news',
+        name: 'admin-news-list',
+        component: () => import('../views/admin/AdminNewsListView.vue'),
+      },  
+      {
+        path: '/admin/news/edit/:id',
+        name: 'admin-news-edit',
+      component: () => import('../views/admin/EditNewsView.vue'),
+  },
       { 
         path: 'settings', 
         name: 'admin-settings',
@@ -82,6 +97,11 @@ const routes = [
       name: 'admin-appointments',
       component: () => import('../views/admin/AdminAppointmentsView.vue'),
     },
+    {
+      path: 'assessment-requests',
+      name: 'admin-assessment-requests',
+      component: () => import('../views/admin/AdminAssessmentRequestsView.vue'),
+    }
     ],
   },
   

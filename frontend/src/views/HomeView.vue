@@ -1,5 +1,7 @@
 <script setup lang="ts">
-// IMPORTS OBLIGATOIRES DES SOUS-COMPOSANTS
+//import { ref } from 'vue'
+
+// IMPORTS DES SECTIONS
 import HeroSection from '../components/homepage/HeroSection.vue';
 import ServiceSection from '../components/homepage/ServiceSection.vue';
 import MethodServiceSection from '../components/homepage/MethodServiceSection.vue';
@@ -7,6 +9,11 @@ import BourseSection from '../components/homepage/BourseSection.vue';
 import ActualitesSection from '../components/homepage/ActualitesSection.vue';
 import ContactSection from '../components/homepage/ContactSection.vue';
 
+// MODALE
+
+
+// État de la modale
+//const showModal = ref(false)
 </script>
 
 <template>
@@ -18,10 +25,11 @@ import ContactSection from '../components/homepage/ContactSection.vue';
     <ActualitesSection />
     <ContactSection />
   </main>
+
+
 </template>
 
 <style scoped>
-/* Conteneur principal gérant  */
 .home-view {
   display: flex;
   flex-direction: column;
@@ -30,5 +38,4 @@ import ContactSection from '../components/homepage/ContactSection.vue';
   background-color: #f8fafc;
   padding-bottom: 2rem;
 }
-
 </style>

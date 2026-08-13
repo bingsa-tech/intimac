@@ -1,45 +1,48 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Ajustez selon votre auth
 
-// Si vous avez un guard d'authentification/Admin (optionnel)
-// import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-// import { RolesGuard } from '../auth/guards/roles.guard';
-
-@Controller('news') // Génère la route /news
+@ApiTags('News') // Groupe dans Swagger UI
+@Controller('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
-  // Route publique : GET /news
-  @Get()
-  findAll() {
-    return this.newsService.findAll();
-  }
-
-  // Route publique : GET /news/:id
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.newsService.findOne(id);
-  }
-
-  // Route protégée : POST /news
-  // @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Créer une nouvelle actualité (Admin)' })
+  @ApiResponse({ status: 201, description: 'L\'actualité a été créée avec succès.' })
   create(@Body() createNewsDto: CreateNewsDto) {
     return this.newsService.create(createNewsDto);
   }
 
-  // Route protégée : PATCH /news/:id
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get()
+  @ApiOperation({ summary: 'Récupérer toutes les actualités' })
+  findAll() {
+    return this.newsService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Récupérer une actualité par son ID' })
+  findOne(@Param('id') id: string) {
+    return this.newsService.findOne(id);
+  }
+
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Modifier une actualité (Admin)' })
   update(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
     return this.newsService.update(id, updateNewsDto);
   }
 
-  // Route protégée : DELETE /news/:id
-  // @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Supprimer une actualité (Admin)' })
   remove(@Param('id') id: string) {
     return this.newsService.remove(id);
   }

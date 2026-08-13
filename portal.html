@@ -19,6 +19,17 @@
     <a href="http://localhost:5173" target="_blank" class="btn"> APP INTERFACE</a>
     <a href="http://localhost:3000/api" target="_blank" class="btn secondary"> EndPoints</a>
     <a href="http://localhost:5555" target="_blank" class="btn secondary">ORM INTERFACE</a>
+    <a href="#" onclick="shutdown()" class="btn secondary">Arrêter les serveurs</a>
   </div>
+  
 </body>
 </html>
+
+
+<script>
+  function shutdown() {
+    fetch("http://localhost:3000/shutdown", { method: "POST" })
+      .then(() => alert("Arrêt demandé."))
+      .catch(() => alert("Erreur : impossible d'arrêter."));
+  }
+</script>

@@ -172,3 +172,4 @@ router.beforeEach((to) => {
 
   return true;
   });
+  export default router;

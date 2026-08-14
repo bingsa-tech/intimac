@@ -128,7 +128,7 @@ const router = createRouter({
 });
 
 // 🔒 GUARD DE NAVIGATION
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const token = localStorage.getItem('token');
   const userStr = localStorage.getItem('user');
   

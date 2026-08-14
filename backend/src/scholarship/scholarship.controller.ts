@@ -3,8 +3,6 @@ import { ScholarshipService } from './scholarship.service';
 import { CreateScholarshipDto } from './dto/scholarship.dto';
 import { UpdateScholarshipDto } from './dto/update-scholarship.dto';
 
-// Si tu as un guard de rôle Admin, tu peux le réactiver ici :
-// @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('scholarships')
 export class ScholarshipController {
   constructor(private readonly scholarshipService: ScholarshipService) {}

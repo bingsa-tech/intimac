@@ -3,11 +3,11 @@ import { IsString, IsNotEmpty, IsOptional, IsNumber, IsDateString, IsUrl } from 
 export class CreateScholarshipDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description!: string;
 
   @IsNumber()
   @IsOptional()
@@ -15,15 +15,15 @@ export class CreateScholarshipDto {
 
   @IsString()
   @IsNotEmpty()
-  coverageType: string; // ex: "FULL", "PARTIAL", "TUITION_ONLY"
+  coverageType!: string;
 
   @IsDateString()
   @IsNotEmpty()
-  deadline: string;
+  deadline!: string;
 
   @IsString()
   @IsNotEmpty()
-  countryId: string;
+  countryId!: string;
 
   @IsString()
   @IsOptional()

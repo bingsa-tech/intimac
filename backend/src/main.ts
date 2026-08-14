@@ -22,8 +22,8 @@ async function bootstrap() {
 
   // --- CONFIGURATION SWAGGER ---
   const config = new DocumentBuilder()
-    .setTitle('API Plateforme Académique')
-    .setDescription('Documentation de l’API pour la gestion des universités, facultés, pays et authentification')
+    .setTitle('API Plateforme Echanges Competences')
+    .setDescription('EndPoints Intermediaire immigration académique et Professionnelles')
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -34,7 +34,7 @@ async function bootstrap() {
         description: 'Entrez votre token JWT',
         in: 'header',
       },
-      'access-token', // Nom de la référence de sécurité
+      'access-token', 
     )
     .build();
 

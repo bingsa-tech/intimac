@@ -145,12 +145,12 @@ router.beforeEach((to) => {
 
   // 1. Si la route nécessite d'être connecté et qu'aucun token n'est présent
   if (to.meta.requiresAuth && !token) {
-    return next('/login');
+    return { path: '/login' };
   }
 
   // 2. Redirection des ADMINS hors du dashboard étudiant
   if (to.path.startsWith('/dashboard') && userRole === 'ADMIN') {
-    return next('/admin');
+    return { path: '/admin' };
   }
 
   // 3. Vérification stricte des rôles requis
@@ -161,16 +161,14 @@ router.beforeEach((to) => {
       console.warn(`[Guard] Accès refusé à ${to.path}. Rôle attendu: ${requiredRole}, Rôle actuel: ${userRole}`);
       
       if (userRole === 'ADMIN') {
-        return next('/admin');
+        return { path: '/admin' };
       }
       if (userRole === 'ADVISOR') {
-        return next('/advisor/dashboard');
+        return { path: '/advisor/dashboard' };
       }
-      return next('/dashboard');
+      return { path: '/dashboard' };
     }
   }
 
-  next();
-});
-
-export default router;
+  return true;
+  });

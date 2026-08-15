@@ -1,4 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AdminService } from './admin.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'; // Ajustez selon vos guards
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('admin')
-export class AdminController {}
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('ADMIN') // Restreint l'accès aux administrateurs uniquement
+export class AdminController {
+  constructor(private readonly adminService: AdminService) {}
+
+ @Get('stats')
+  async getDashboardStats() {
+    return this.adminService.getDashboardStats();
+  }
+}

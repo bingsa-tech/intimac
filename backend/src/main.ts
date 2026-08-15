@@ -7,7 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // CORS configuration
   app.enableCors({
-    origin: '*', // Autoriser toutes les origines (à ajuster selon vos besoins)
+    origin: [
+      'http://localhost:5173', // Frontend local
+      'https://intimmacapro-frontend.onrender.com', // Frontend production
+    ], // Autoriser toutes les origines (à ajuster selon vos besoins)
     credentials: true,
   });
 

@@ -6,7 +6,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('ADMIN') // Restreint l'accès aux administrateurs uniquement
+@Roles('ADMIN') 
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
@@ -14,4 +14,9 @@ export class AdminController {
   async getDashboardStats() {
     return this.adminService.getDashboardStats();
   }
+   @Get('users')
+  async getUsers() {
+    return this.adminService.getUsers();
+  }
+
 }

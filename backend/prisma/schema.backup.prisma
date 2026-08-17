@@ -15,10 +15,10 @@ model User {
   lastName            String?
   password            String
   role                Role              @default(STUDENT)
+  lastSeen            DateTime?
   isVerified          Boolean           @default(false)
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
-  lastSeen            DateTime?
   applications        Application[]
   advisorAppointments Appointment[]     @relation("AdvisorAppointments")
   studentAppointments Appointment[]     @relation("StudentAppointments")

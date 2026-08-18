@@ -13,6 +13,7 @@ model User {
   email               String            @unique
   firstName           String?
   lastName            String?
+  birthDate           DateTime?
   password            String
   role                Role              @default(STUDENT)
   isVerified          Boolean           @default(false)
@@ -36,7 +37,7 @@ model Profile {
   firstName        String
   lastName         String
   birthDate        DateTime
-  gender           Gender
+  gender           Gender?
   nationality      String
   phone            String?
   address          String?

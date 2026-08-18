@@ -35,7 +35,7 @@ onMounted(() => {
     <div class="section-header center">
       <span class="badge-pill">Informations</span>
       <h2 class="section-title">Trouver les dernières informations</h2>
-      <p class="section-subtitle">Nous vous accompagnerons dans votre parcours d'immigration.</p>
+      <p class="section-subtitle">Nous vous accompagnerons dans vos parcours.</p>
     </div>
 
     <!-- State: Squelettes de chargement -->

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Nettoyage automatique des processus enfants lors du CTRL+C
+trap 'echo -e "\n🛑 Arrêt de tous les services..."; kill 0' EXIT INT TERM
+
 echo "🧹 Nettoyage des anciens processus sur les ports 3000, 5173, 5555..."
 fuser -k 3000/tcp 5173/tcp 5555/tcp > /dev/null 2>&1
 

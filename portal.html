@@ -2,34 +2,242 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Portail - Immigration Numerical Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portail Dev - Immigration Numerical Academy</title>
   <style>
-    body { font-family: system-ui, sans-serif; background: #4a4f5a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-    .card { background: #1e293b; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; width: 380px; }
-    h1 { font-size: 1.25rem; margin-bottom: 1.5rem; color: #38bdf8; }
-    .btn { display: block; background: #3b82f6; color: white; text-decoration: none; padding: 0.75rem; border-radius: 8px; margin: 0.75rem 0; font-weight: 600; transition: background 0.2s; }
-    .btn:hover { background: #2563eb; }
-    .btn.secondary { background: #475569; }
-    .btn.secondary:hover { background: #334155; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 2.5rem 2rem;
+      border-radius: 16px;
+      border: 1px solid #334155;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .logo-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: #0284c720;
+      color: #38bdf8;
+      border: 1px solid #0284c740;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+    }
+
+    p.subtitle {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      margin-bottom: 1.75rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.925rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    /* Bouton Principal - Vue.js App */
+    .btn.primary {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    }
+    .btn.primary:hover {
+      background: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    /* Boutons Secondaires */
+    .btn.secondary {
+      background: #334155;
+      color: #e2e8f0;
+      border-color: #475569;
+    }
+    .btn.secondary:hover {
+      background: #475569;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Bouton Dangereux - Arrêt */
+    .btn.danger {
+      background: #7f1d1d30;
+      color: #fca5a5;
+      border-color: #991b1b50;
+      margin-top: 0.5rem;
+    }
+    .btn.danger:hover {
+      background: #991b1b;
+      color: #ffffff;
+    }
+
+    /* Indicateurs de Statut en direct (LEDs) */
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #64748b;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .status-dot.online {
+      background-color: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .status-dot.offline {
+      background-color: #ef4444;
+    }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    /* Animation optionnelle pour le sablier */
+#push-loader {
+  display: inline-block;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.3; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.1); }
+}
   </style>
 </head>
 <body>
+
   <div class="card">
-    <h1>Academy Immigration Platform</h1>
-    <a href="http://localhost:5173" target="_blank" class="btn"> APP INTERFACE</a>
-    <a href="http://localhost:3000/api" target="_blank" class="btn secondary"> EndPoints</a>
-    <a href="http://localhost:5555" target="_blank" class="btn secondary">ORM INTERFACE</a>
-    <a href="#" onclick="shutdown()" class="btn secondary">Arrêter les serveurs</a>
+    <span class="logo-badge">Environnement Local</span>
+    <h1>Academy Immigration</h1>
+    <p class="subtitle">Portail de contrôle des services de développement</p>
+
+    <div class="btn-group">
+      <!-- App Frontend -->
+      <a href="http://localhost:5173" target="_blank" class="btn primary">
+        <span class="btn-content">🎨 App Interface (Vue.js)</span>
+        <span id="dot-frontend" class="status-dot" title="Vérification..."></span>
+      </a>
+
+      <!-- API Endpoints -->
+      <a href="http://localhost:3000/api" target="_blank" class="btn secondary">
+        <span class="btn-content">⚙️ Swagger API Endpoints</span>
+        <span id="dot-backend" class="status-dot" title="Vérification..."></span>
+      </a>
+
+      <!-- Prisma Studio -->
+      <a href="http://localhost:5555" target="_blank" class="btn secondary">
+        <span class="btn-content">📦 Prisma ORM Studio</span>
+        <span id="dot-prisma" class="status-dot" title="Vérification..."></span>
+      </a>
+      <!-- Bouton Git Push -->
+        <button onclick="triggerPush()" class="btn secondary">
+        <span class="btn-content">🚀 Sauvegarder & Pusher (Git)</span>
+        <span id="push-loader" style="display: none;">⏳</span>
+      </button>
+      <!-- Arrêt des serveurs -->
+      <button onclick="shutdown()" class="btn danger">
+        <span class="btn-content">🛑 Arrêter tous les serveurs</span>
+      </button>
+    </div>
   </div>
+
+  <script>
+    // Vérification de la disponibilité des ports localement
+    async function checkService(url, elementId) {
+      const dot = document.getElementById(elementId);
+      try {
+        await fetch(url, { mode: 'no-cors' });
+        dot.className = 'status-dot online';
+        dot.title = 'Service en ligne';
+      } catch (err) {
+        dot.className = 'status-dot offline';
+        dot.title = 'Service hors ligne';
+      }
+    }
+
+    function checkAllServices() {
+      checkService('http://localhost:5173', 'dot-frontend');
+      checkService('http://localhost:3000', 'dot-backend');
+      checkService('http://localhost:5555', 'dot-prisma');
+    }
+
+    // Demande d'arrêt des serveurs avec confirmation
+  function shutdown() {
+    if (confirm("Êtes-vous sûr de vouloir arrêter tous les serveurs locaux ?")) {
+      fetch("http://localhost:3000/shutdown", { method: "POST" })
+        .then(() => alert("✅ Serveurs arrêtés avec succès."))
+        .catch(() => alert("✅ Ordre d'arrêt transmis (serveurs éteints)."))
+        .finally(() => window.close());
+    }
+  }
+  async function triggerPush() {
+  const loader = document.getElementById('push-loader');
   
+  if (!confirm("Voulez-vous valider le build NestJS et envoyer les modifications sur GitHub ?")) {
+    return;
+  }
+
+  try {
+    loader.style.display = 'inline';
+    const response = await fetch("http://localhost:3000/git-push", { method: "POST" });
+    const result = await response.json();
+
+    if (result.success) {
+      alert("✅ Git Push exécuté avec succès !\n\n" + (result.output || "Modifications envoyées."));
+    } else {
+      alert("❌ Erreur lors du Push :\n" + result.message);
+    }
+  } catch (err) {
+    alert("❌ Impossible de contacter le serveur backend pour exécuter le script.");
+  } finally {
+    loader.style.display = 'none';
+  }
+}
+    // Lancer la vérification au chargement
+    checkAllServices();
+  </script>
+
 </body>
 </html>
-
-
-<script>
-  function shutdown() {
-    fetch("http://localhost:3000/shutdown", { method: "POST" })
-      .then(() => alert("Arrêt demandé."))
-      .catch(() => alert("Erreur : impossible d'arrêter."));
-  }
-</script>

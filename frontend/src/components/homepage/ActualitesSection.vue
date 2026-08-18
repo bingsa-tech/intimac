@@ -33,9 +33,9 @@ onMounted(() => {
 <template>
   <section id= "news" class="news-section">
     <div class="section-header center">
-      <span class="badge-pill">Actualités</span>
-      <h2 class="section-title">Mises à jour & Immigration</h2>
-      <p class="section-subtitle">Restez informé des derniers changements de politiques d'immigration et des programmes.</p>
+      <span class="badge-pill">Informations</span>
+      <h2 class="section-title">Trouver les dernières informations</h2>
+      <p class="section-subtitle">Nous vous accompagnerons dans votre parcours d'immigration.</p>
     </div>
 
     <!-- State: Squelettes de chargement -->

@@ -74,14 +74,15 @@ const createNews = async () => {
       </div>
 
       <div class="form-group">
-        <label>Catégorie :</label>
-        <select v-model="form.category" class="input">
-          <option value="Information">Information Générale</option>
-          <option value="IRCC">Mise à jour IRCC</option>
-          <option value="Bourses">Bourses & Financement</option>
-          <option value="Procédure">Procédures d'admission</option>
-        </select>
-      </div>
+  <label>Catégorie :</label>
+  <select v-model="form.category" class="input">
+    <option value="Information">Information Générale</option>
+    <option value="IRCC">Mise à jour IRCC</option>
+    <option value="Bourses">Bourses & Financement</option>
+    <option value="Forum">Forum & Colloques</option>
+    <option value="Procédure">Procédure</option>
+  </select>
+</div>
 
       <div class="form-group">
         <label>Lien de la source originale (optionnel) :</label>
